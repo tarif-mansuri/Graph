@@ -13,7 +13,28 @@ public class KruskalsMinimumSpanningTree {
 		for(int i=0;i<parent.length;i++) {
 			parent[i] = i;
 		}
-		return null;
+		ArrayList<Edge> res = new ArrayList<Edge>();
+		for(Edge e: g.edges) {
+			if(!isCycle(parent, e.start, e.end)) {
+				res.add(e);
+				parent[getParent(parent, e.start)] = e.end;
+			}
+		}
+		return res;
+	}
+	
+	public static boolean isCycle(int[] parent, int start, int end) {
+		if(getParent(parent, start) == getParent(parent, end)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static int getParent(int[] parent, int vertex) {
+		if(parent[vertex] == vertex) {
+			return vertex;
+		}
+		return getParent(parent, parent[vertex]);
 	}
 	
 	public static void main(String[] args) {
@@ -30,7 +51,6 @@ public class KruskalsMinimumSpanningTree {
 			edges.add(edge);
 		}
 		s.close();
-		Collections.sort(edges);
 		Graph g = new Graph(v, e, edges);
 		ArrayList<Edge> msEdges = getMST(g);
 		for(Edge edge: msEdges) {
